@@ -5,6 +5,7 @@ import spacy
 import json
 from PyPDF2 import PdfFileReader
 
+
 def is_title(text):
     # if a page has less than 15 words, it is a title
     if len(text.split()) < 15:
@@ -101,7 +102,7 @@ if __name__ == '__main__':
     print(f'excerpt of tale lemmatized {title}:\n{book_lemmas[title][:100]}...')
     print(f'type: {type(book_lemmas[title])}')
 
-    # to sabe to json format
-    object = {'book': book, 'book_lemmas': book_lemmas}
-    with open('text_processed2.json', 'w', encoding='utf8') as outfile:
-        json.dump(object, outfile)
+    # to sabe to json format, uncomment these lines
+    #object = {'book': book, 'book_lemmas': book_lemmas}
+    #with open('text_processed2.json', 'w', encoding='utf8') as outfile:
+    #    json.dump(object, outfile)
