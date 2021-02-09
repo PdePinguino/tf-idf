@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import re
+import spacy
+import json
 from PyPDF2 import PdfFileReader
 
 def is_title(text):
@@ -54,39 +56,52 @@ def join_pages(tale):
     tale = ' '.join([page for page in tale[1:]])  # dropping first line that is the title
     return tale
 
-def clean_tale(tale, as_list):
+def clean_tale(tale):
     tale = remove_punctuation(tale)
     tale = remove_ool_characters(tale)
     tale = remove_whitespace(tale)
     tale = lowercase(tale)
     tale = join_pages(tale)  # each page is a string in tale; now is only one long string
 
-    if as_list:
-        tale = tale.split()  # splitting the long string into words
-
     return tale
 
-def clean_book(book, as_list):
+def clean_book(book):
     for tale in book.keys():
-        book[tale] = clean_tale(book[tale], as_list)
+        book[tale] = clean_tale(book[tale])
 
     return book
 
-def preprocess(file, as_list=False):
+def lemmatize(book):
+    nlp = spacy.load('es_dep_news_trf')
+    lemmas = {}
+    for tale in book:
+        doc = nlp(book[tale])
+        lemmas[tale] = [token.lemma_ for token in doc]
+
+    return lemmas
+
+def preprocess(file):
     book = extract_tales(file)
-    book = clean_book(book, as_list)
+    book = clean_book(book)
+    book_lemmas = lemmatize(book)
+    print(book.keys(), book_lemmas.keys())
+    return book, book_lemmas
 
-    return book
 
 if __name__ == '__main__':
 
     file = 'cuentos-manuel-rojas.pdf'
-    book = preprocess(file, as_list=False)  # book is a dictionary with each tale's title as key
+    book, book_lemmas = preprocess(file)  # book is a dictionary with each tale's title as key
     # book[title] is a long string with the tale.
-    # if as_list == True, then book[title] is a list with all words belonging to each tale
-    # spacy nlp model takes a string as argument, not a list of words
     print(f'tale\'s titles: {list(book.keys())}')
     print(f'number of tales: {len(book.keys())}')
     title = list(book.keys())[0]
     print(f'excerpt of tale {title}:\n{book[title][:100]}...')
     print(f'type: {type(book[title])}')
+    print(f'excerpt of tale lemmatized {title}:\n{book_lemmas[title][:100]}...')
+    print(f'type: {type(book_lemmas[title])}')
+
+    # to sabe to json format
+    object = {'book': book, 'book_lemmas': book_lemmas}
+    with open('text_processed2.json', 'w', encoding='utf8') as outfile:
+        json.dump(object, outfile)
