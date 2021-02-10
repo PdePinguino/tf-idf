@@ -101,7 +101,7 @@ if __name__ == '__main__':
     print(f'type: {type(book[title])}')
     print(f'excerpt of tale lemmatized {title}:\n{book_lemmas[title][:100]}...')
     print(f'type: {type(book_lemmas[title])}')
-
+    
     # to sabe to json format, uncomment these lines
     #object = {'book': book, 'book_lemmas': book_lemmas}
     #with open('text_processed2.json', 'w', encoding='utf8') as outfile:

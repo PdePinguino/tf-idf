@@ -2,21 +2,34 @@
 
 import json
 import vocab
+import math
 
-def frequency(word, tale):
-    freq = tale.count(word)
+
+def frequency(term, tale):
+    freq = tale.count(term)
     freq_normalized = freq / len(tale)
 
     return freq_normalized
 
-def frequency_N(word, book):
+def term_in_doc(term, doc):
+    if term in doc:
+        return 1
+    else:
+        return 0
+
+def frequency_N(term, book):
+    # number of documents that term t occurs in book (set of documents)
     freq = 0
     for tale in book:
-        freq += book[tale].count(word)
+        freq += term_in_doc(term, book[tale])
+    #print(freq, term)
+    if freq < 1:
+        raise ValueError('no terms should appear in no documents')
 
     return freq
 
-def term_frequency(book, vocab):
+def TF(book, vocab):
+    # Term Frequency
     # the amount of times that term t occurs in document d
     # normalized by the total amount of occurrences in document d
     tf = {}
@@ -27,24 +40,31 @@ def term_frequency(book, vocab):
 
     return tf
 
-def inverse_document_frequency(book, vocab):
+def IDF(book, vocab):
+    # Inverse Document Frequency
     # total amount of documents d divided by
-    # the number of documents d that the term t occurs
+    # the number of documents d in which the term t occurs
     idf = {}
     N = len(book.keys())
+
     for voc in vocab:
-        idf[voc] = frequency_N(voc, book)
+        # added 1 to denominator to avoid division by 0 if term t is not in any document
+        idf_score = math.log(N / frequency_N(voc, book) + 1)
+        # if term t appears in all documents, then log is 0.0
+        if idf_score == 0.0:  # smoothing idf score to avoid multiplication by 0
+            idf_score = 0.0000001
+        idf[voc] = idf_score
 
     check_idf(idf)
 
     return idf
 
 def check_tf(tf):
-    for t in tf:
-        z = [tf[t][tale] for tale in tf[t]]
-        if sum(z) == 0.0:
-            print(tf[t][tale])
-            raise ValueError()
+    # checking that the tf_score across all documents is greater than 0.0
+    for tale in tf:
+        tf_score = [tf[tale][t] for t in tf[tale]]
+        if sum(tf_score) == 0.0:
+            raise ValueError(tf_score)
 
 def check_idf(idf):
     for t in idf:
@@ -52,11 +72,38 @@ def check_idf(idf):
             print(idf[t])
             raise ValueError()
 
+def TFIDF(tf, idf):
+    tf_idf = {}
+    for title in book:
+        tf_idf[title] = {}
+        for voc in vocab[0]:
+            tf_idf[title][voc] = tf[voc][title] * idf[voc]
+
+    return tf_idf
+
+def tfidf_print(tf_idf):
+    for title in tf_idf:
+        print(title)
+        for voc in tf_idf[title]:
+            print('\t',voc, tf_idf[title][voc])
+
+def vectorize_document(vocab, document):
+
+
 if __name__ == '__main__':
     with open('text_processed.json', 'r') as openfile:  # loading created json file
         book = json.load(openfile)
 
     book = book['book_lemmas']
+    #book = {'1':['hola','como','estas', 'yo'], '2':['bien','y','tu', 'hola', 'yo'], '3':['hola','hola','bien']}
     vocab = vocab.generate_vocab(book)
-    tf = term_frequency(book, vocab[0])
-    idf = inverse_document_frequency(book, vocab[0])
+    vocab = vocab[0]
+
+    tf = TF(book, vocab)
+    idf = TDF(book, vocab)
+
+    tf_idf = TFIDF(tf, idf)
+    #tfidf_print(tf_idf)
+    
+    #vectorize_document(vocab, document)
+    # Document Vectorization
