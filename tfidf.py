@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import json
-import vocab
 import math
-
+import vocab
+import preprocessing
 
 def frequency(term, tale):
     freq = tale.count(term)
@@ -87,7 +87,16 @@ def tfidf_print(tf_idf):
         for voc in tf_idf[title]:
             print('\t',voc, tf_idf[title][voc])
 
+def matching_score(tf_idf, query):
+    query_processed = preprocess.preprocess_query(query)
+    matching_score = {title: 0 for title in tf_idf.keys()}
+    for term in query:
+        for title in tf_idf:
+            if term in tf_idf[title]:
+                matching_score[title] += tf_idf[title][term]
+
 def vectorize_document(vocab, document):
+    pass
 
 
 if __name__ == '__main__':
@@ -104,6 +113,6 @@ if __name__ == '__main__':
 
     tf_idf = TFIDF(tf, idf)
     #tfidf_print(tf_idf)
-    
+
     #vectorize_document(vocab, document)
     # Document Vectorization

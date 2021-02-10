@@ -72,21 +72,27 @@ def clean_book(book):
 
     return book
 
-def lemmatize(book):
+def lemmatize(tale):
     nlp = spacy.load('es_dep_news_trf')
-    lemmas = {}
-    for tale in book:
-        doc = nlp(book[tale])
-        lemmas[tale] = [token.lemma_ for token in doc]
+    doc = nlp(tale)
+    lemmas = [token.lemma_ for token in doc]
 
     return lemmas
 
 def preprocess(file):
     book = extract_tales(file)
     book = clean_book(book)
-    book_lemmas = lemmatize(book)
-    print(book.keys(), book_lemmas.keys())
+    book_lemmas = {tale:lemmatize(book[tale]) for tale in book}
+
     return book, book_lemmas
+
+def preprocess_query(query):
+    query = remove_punctuation(query)
+    query = remove_ool_characters(query)
+    query = lowercase(query)
+    query = ''.join(query)
+
+    return query
 
 
 if __name__ == '__main__':
@@ -97,12 +103,18 @@ if __name__ == '__main__':
     print(f'tale\'s titles: {list(book.keys())}')
     print(f'number of tales: {len(book.keys())}')
     title = list(book.keys())[0]
+    print(title)
     print(f'excerpt of tale {title}:\n{book[title][:100]}...')
     print(f'type: {type(book[title])}')
+    print(len(book_lemmas[title]))
+    print(len(book_lemmas[title][:100]))
     print(f'excerpt of tale lemmatized {title}:\n{book_lemmas[title][:100]}...')
     print(f'type: {type(book_lemmas[title])}')
-    
-    # to sabe to json format, uncomment these lines
+
+    query = 'Hola ¿cómo estás?'
+    print(preprocess_query(query))
+
+    # to save to json format, uncomment these lines
     #object = {'book': book, 'book_lemmas': book_lemmas}
     #with open('text_processed2.json', 'w', encoding='utf8') as outfile:
     #    json.dump(object, outfile)
