@@ -90,7 +90,7 @@ def preprocess_query(query):
     query = remove_punctuation(query)
     query = remove_ool_characters(query)
     query = lowercase(query)
-    query = ''.join(query)
+    query = ''.join(query).split()
 
     return query
 
