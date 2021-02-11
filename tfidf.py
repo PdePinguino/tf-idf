@@ -147,12 +147,15 @@ def vectorize_query(query, vocab, book):
 
     return query_vector
 
+def cosine_similarity(v1, v2):
+    cs = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+    return cs
 
 if __name__ == '__main__':
-    with open('text_processed.json', 'r') as openfile:  # loading created json file
-        book = json.load(openfile)
+    #with open('text_processed.json', 'r') as openfile:  # loading created json file
+    #    book = json.load(openfile)
 
-    book = book['book_lemmas']
+    #book = book['book_lemmas']
     book = {'1':['hola','cómo','estás', 'yo'], '2':['hola', 'bien','y','tu', 'yo'], '3':['hola','hola','bien']}
     print(book)
     vocab = vocab.generate_vocab(book)
@@ -164,7 +167,7 @@ if __name__ == '__main__':
     tf_idf = TFIDF(tf, idf, vocab)
     tfidf_print(tf_idf)
 
-    query = 'hola cómo estás?'
+    query = 'hola cómo estás? bien y tu'
 
     # matching score metric
     matching_score(tf_idf, query)
@@ -172,3 +175,5 @@ if __name__ == '__main__':
     # cosine similarity
     documents_vectors = {tale: vectorize_tfidf(tf_idf[tale], vocab) for tale in book}
     query_vector = vectorize_query(query, vocab, book)
+    for document in documents_vectors:
+        print(cosine_similarity(documents_vectors[document], query_vector))
