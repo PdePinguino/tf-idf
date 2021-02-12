@@ -153,13 +153,12 @@ def cosine_similarity(v1, v2):
     cs = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
     return cs
 
+
 if __name__ == '__main__':
     with open('text_processed.json', 'r') as openfile:  # loading created json file
         book = json.load(openfile)
 
     book = book['book_lemmas']
-    #book = {'1':['hola','cómo','estás', 'yo'], '2':['hola', 'bien','y','tu', 'yo'], '3':['hola','hola','bien']}
-    #print(book)
 
     vocab = vocab.generate_vocab(book)
     vocab = list(vocab[0])
@@ -173,14 +172,17 @@ if __name__ == '__main__':
     query = ' '.join(['pedir', 'su', 'desayuno', 'temprano', 'pagar', 'su', 'cuenta', 'y', 'él', 'marchar', 'este', 'ser', 'todo', 'el', 'historia', 'uno', 'momento', 'de', 'silencio', 'y', 'no', 'él', 'ver', 'más', 'preguntar', 'dos', 'o', 'tres', 'voz', 'a', 'uno', 'tiempo', 'nunca', 'más', 'él', 'sentir', 'varios', 'puñetazo', 'sobre', 'el', 'mesa'])
 
     # matching score metric
-    matching_score(tf_idf, query)
+    best_k = matching_score(tf_idf, query)
+    for k,v in best_k.items():
+        print(k,v)
 
-    # cosine similarity
+    # cosine similarity metric
     documents_vectors = {tale: vectorize_tfidf(tf_idf[tale], vocab) for tale in book}
     query_vector = vectorize_query(query, vocab, book)
-    query_cosine_similarities = {document: cosine_similarity(documents_vectors[document], query_vector) for document in documents_vectors}
+    cosine_similarities = {document: cosine_similarity(documents_vectors[document], query_vector) for document in documents_vectors}
+    sorted_cosine_similarities = {k: v for k, v in sorted(cosine_similarities.items(), key=operator.itemgetter(1), reverse=True)}
 
-    for k,v in query_cosine_similarities.items():
+    for k,v in sorted_cosine_similarities.items():
         print(k,'\t',v)
 
     #plot.plot_heatmap(query_cosine_similarities)
