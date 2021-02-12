@@ -6,6 +6,8 @@ import operator
 import numpy as np
 import vocab
 import preprocessing
+import plot
+
 
 def frequency(term, tale):
     freq = tale.count(term)
@@ -152,22 +154,23 @@ def cosine_similarity(v1, v2):
     return cs
 
 if __name__ == '__main__':
-    #with open('text_processed.json', 'r') as openfile:  # loading created json file
-    #    book = json.load(openfile)
+    with open('text_processed.json', 'r') as openfile:  # loading created json file
+        book = json.load(openfile)
 
-    #book = book['book_lemmas']
-    book = {'1':['hola','cómo','estás', 'yo'], '2':['hola', 'bien','y','tu', 'yo'], '3':['hola','hola','bien']}
-    print(book)
+    book = book['book_lemmas']
+    #book = {'1':['hola','cómo','estás', 'yo'], '2':['hola', 'bien','y','tu', 'yo'], '3':['hola','hola','bien']}
+    #print(book)
+
     vocab = vocab.generate_vocab(book)
     vocab = list(vocab[0])
-    vocab.append('neewword')
+
     tf = TF(book, vocab)
     idf = IDF(book, vocab)
 
     tf_idf = TFIDF(tf, idf, vocab)
-    tfidf_print(tf_idf)
+    #tfidf_print(tf_idf)
 
-    query = 'hola cómo estás? bien y tu'
+    query = ' '.join(['pedir', 'su', 'desayuno', 'temprano', 'pagar', 'su', 'cuenta', 'y', 'él', 'marchar', 'este', 'ser', 'todo', 'el', 'historia', 'uno', 'momento', 'de', 'silencio', 'y', 'no', 'él', 'ver', 'más', 'preguntar', 'dos', 'o', 'tres', 'voz', 'a', 'uno', 'tiempo', 'nunca', 'más', 'él', 'sentir', 'varios', 'puñetazo', 'sobre', 'el', 'mesa'])
 
     # matching score metric
     matching_score(tf_idf, query)
@@ -175,5 +178,9 @@ if __name__ == '__main__':
     # cosine similarity
     documents_vectors = {tale: vectorize_tfidf(tf_idf[tale], vocab) for tale in book}
     query_vector = vectorize_query(query, vocab, book)
-    for document in documents_vectors:
-        print(cosine_similarity(documents_vectors[document], query_vector))
+    query_cosine_similarities = {document: cosine_similarity(documents_vectors[document], query_vector) for document in documents_vectors}
+
+    for k,v in query_cosine_similarities.items():
+        print(k,'\t',v)
+
+    #plot.plot_heatmap(query_cosine_similarities)
