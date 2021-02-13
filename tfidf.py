@@ -138,15 +138,15 @@ class TFIDF():
 
         return best_k
 
-    def rank_scores(self, scores, k=-1):
+    def rank_scores(self, scores, n=-1):
         """
         function that ranks (descending order) score results
-        input: scores is a dictionary, k is the amount of results to retrieve
-        output: ranked scores dictionary with a max lenght of k
-        if k == -1, then all results are retrieved
+        input: scores is a dictionary, n is the amount of results to retrieve
+        output: ranked scores dictionary with a max lenght of n
+        if n == -1, then all results are retrieved
         """
-        if k == -1: k = len(scores)
-        ranked_scores = {k: v for k, v in sorted(scores.items(), key=operator.itemgetter(1), reverse=True)[:k]}
+        if n == -1: n = len(scores)
+        ranked_scores = {k: v for k, v in sorted(scores.items(), key=operator.itemgetter(1), reverse=True)[:n]}
 
         return ranked_scores
 
@@ -204,18 +204,31 @@ class TFIDF():
             for voc in self.tfidf_documents[doc]:
                 print('\t',voc, self.tfidf_documents[doc][voc])
 
-    def print_scores(self, scores):
+    def print_scores(self, scores, n=-1):
         """
         function that nicely prints scores
         """
-        for k, v in scores.items():
+        if n == -1: n = len(scores)
+        for i, (k, v) in enumerate(scores.items()):
             print(k, '\t', v)
+            if i == n-1:
+                break
+
+    def higher_terms(self, n=10):
+        ranked_scores = {doc: self.rank_scores(self.tfidf_documents[doc], n) for doc in self.tfidf_documents}
+
+        return ranked_scores
 
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='...')
     parser.add_argument('-t', '--test', action='store_true', default=False)
+    parser.add_argument('-c', '--cosine', action='store_true', default=False)
+    parser.add_argument('-m', '--matching', action='store_true', default=False)
+    parser.add_argument('-s', '--scores', action='store_true', default=False)
+    parser.add_argument('-q', '--query', action='store', default=False)
+
     args = parser.parse_args()
 
     if args.test:
@@ -234,21 +247,30 @@ if __name__ == '__main__':
     vocab = list(vocab_info[0])
     tfidf = TFIDF(documents, vocab)
 
-    # input: query as a string (i.e. 'this is a query')
-    query_preprocessed = preprocessing.preprocess_query(query)
+    if args.query:
+        # input: query as a string (i.e. 'this is a query')
+        query_preprocessed = preprocessing.preprocess_query(args.query)
 
-    # comparison metrics:
-    # 1) matching score
-    matching_score = tfidf.matching_score(query_preprocessed)
-    #tfidf.print_scores(matching_score)
+        # comparison metrics:
+        if args.matching:
+            # 1) matching score
+            matching_score = tfidf.matching_score(query_preprocessed)
+            tfidf.print_scores(matching_score, n=3)
 
-    # 2) cosine similarity
-    # it requires query in vector space
-    query_tfidf = tfidf.query2tfidf(query_preprocessed)
-    query_vector = tfidf.vectorize_tfidf(query_tfidf)
-    cosine_similarities = tfidf.compute_cosine_similarity(query_vector)
-    #tfidf.print_scores(cosine_similarities)
+        if args.cosine:
+            # 2) cosine similarity
+            # it requires query in vector space
+            query_tfidf = tfidf.query2tfidf(query_preprocessed)
+            query_vector = tfidf.vectorize_tfidf(query_tfidf)
+            cosine_similarities = tfidf.compute_cosine_similarity(query_vector)
+            tfidf.print_scores(cosine_similarities)
 
-    # plotting cosine similarity between documents
-    cosine_similarity_matrix = tfidf.compute_cosine_similarity_matrix()
-    plot.plot_heatmap(cosine_similarity_matrix)
+            # plotting cosine similarity between documents
+            cosine_similarity_matrix = tfidf.compute_cosine_similarity_matrix()
+            plot.plot_heatmap(cosine_similarity_matrix)
+
+    if args.scores:
+        terms = tfidf.higher_terms()
+        for doc in terms:
+            print(doc)
+            tfidf.print_scores(terms[doc])

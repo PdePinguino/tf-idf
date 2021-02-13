@@ -33,8 +33,8 @@ def extract_tales(file):
 
     return book
 
-def remove_punctuation(tale):
-    punctuation = re.compile(r'[!¡"#$%&(),\*+-\./\:;<=>¿?@\[\]^_`{}~|]')
+def remove_punctuation_numbers(tale):
+    punctuation = re.compile(r'[!¡"#$%&(),\*+-\./\:;<=>¿?@\[\]^_`{}~|1234567890]')
     tale = [re.sub(punctuation, '', tale[line]) for line in range(len(tale))]
 
     return tale
@@ -53,13 +53,23 @@ def lowercase(tale):
 
     return tale
 
+def remove_numbers(tale):
+    print(tale)
+    for word in tale:
+        print(type(word))
+    #tale = [word for word in tale if word.isalpha()]
+    #print(tale)
+    quit()
+    return tale
+
 def join_pages(tale):
     tale = ' '.join([page for page in tale[1:]])  # dropping first line that is the title
     return tale
 
 def clean_tale(tale):
-    tale = remove_punctuation(tale)
+    tale = remove_punctuation_numbers(tale)
     tale = remove_ool_characters(tale)
+    #tale = remove_numbers(tale)
     tale = remove_whitespace(tale)
     tale = lowercase(tale)
     tale = join_pages(tale)  # each page is a string in tale; now is only one long string
@@ -87,8 +97,9 @@ def preprocess(file):
     return book, book_lemmas
 
 def preprocess_query(query):
-    query = remove_punctuation(query)
+    query = remove_punctuation_numbers(query)
     query = remove_ool_characters(query)
+    #query = remove_numbers(query)
     query = lowercase(query)
     query = ''.join(query).split()
 
@@ -111,10 +122,10 @@ if __name__ == '__main__':
     print(f'excerpt of tale lemmatized {title}:\n{book_lemmas[title][:100]}...')
     print(f'type: {type(book_lemmas[title])}')
 
-    query = 'Hola ¿cómo estás?'
+    query = 'Hola ¿cómo estás? 12'
     print(preprocess_query(query))
 
     # to save to json format, uncomment these lines
-    #object = {'book': book, 'book_lemmas': book_lemmas}
-    #with open('text_processed2.json', 'w', encoding='utf8') as outfile:
-    #    json.dump(object, outfile)
+    object = {'book': book, 'book_lemmas': book_lemmas}
+    with open('text_processed.json', 'w', encoding='utf8') as outfile:
+        json.dump(object, outfile)
