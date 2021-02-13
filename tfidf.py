@@ -5,6 +5,7 @@ import math
 import operator
 import argparse
 import numpy as np
+import pandas as pd
 import vocab
 import preprocessing
 import plot
@@ -12,9 +13,37 @@ import plot
 
 class TFIDF():
     def __init__(self, documents, vocab):
+        """
+        Term Frequency - Inverse Document Frequency Class
+        It takes a set of documents and a vocabulary to compute TF and IDF.
+        When initialize, it generates the TFIDF score per each word per each document
+        stored in tfidf_documents variable.
+
+        It is also able to process a document query and evaluate document comparisons:
+        - matching score
+        - cosine similarity
+        """
         self.documents = documents
         self.vocab = vocab
         self.N = len(documents)
+
+        self.tf_documents = {doc: self.compute_tf(documents[doc]) for doc in self.documents}
+        # tf_documents is a dictionary to store each word's tf value per document.
+        # tf_documents['doc']['word'] = tf_score
+
+        self.idf = self.compute_idf()
+        # idf is a dictionary to store each word's idf value.
+        # as opposed to tf, idf is a unique value per word across the corpus.
+        # idf['word'] = idf_score
+
+        self.tfidf_documents = {doc: self.compute_tfidf(self.tf_documents[doc], self.idf) for doc in self.documents}
+        # tfidf is the tf_score multiplied by idf_score per each word per each document
+        # tfidf['doc']['word'] = tfidf_score
+        #self.print()
+
+        self.documents_vectors = {doc: self.vectorize_tfidf(self.tfidf_documents[doc]) for doc in self.tfidf_documents}
+        # in order to achieve cosine similarity, tfidf must be vectors
+        # documents_vectors['doc']['vector']
 
     def frequency(self, term, document):
         """
@@ -65,7 +94,7 @@ class TFIDF():
                 idf_score = 0.0000001
 
             idf[voc] = idf_score
-        print(idf)
+
         return idf
 
     def compute_tfidf(self, tf, idf):
@@ -90,7 +119,7 @@ class TFIDF():
 
         return tfidf_query
 
-    def matching_score(self, tfidf_documents, query):
+    def matching_score(self, query):
         """
         function that matches query to all documents
         and assigns a score for each.
@@ -98,14 +127,14 @@ class TFIDF():
         input: tfidf for each document and query preprocessed
         output: a dictionary with ordered results by their matching score
         """
-        matching_score = {doc: 0 for doc in tfidf_documents}
+        matching_score = {doc: 0 for doc in self.tfidf_documents}
 
         for term in query:
-            for doc in tfidf_documents:
-                if term in tfidf_documents[doc]:
-                    matching_score[doc] += tfidf_documents[doc][term]
+            for doc in self.tfidf_documents:
+                if term in self.tfidf_documents[doc]:
+                    matching_score[doc] += self.tfidf_documents[doc][term]
 
-        best_k = self.rank_scores(matching_score, k=10)
+        best_k = self.rank_scores(matching_score)
 
         return best_k
 
@@ -133,6 +162,31 @@ class TFIDF():
 
         return vector
 
+    def compute_cosine_similarity_matrix(self):
+        """
+        function that computes cosine similarity between all documents.
+        returns a dataframe with cosine values.
+        """
+        matrix = {doc: self.compute_cosine_similarity(self.documents_vectors[doc]) for doc in self.documents_vectors}
+
+        matrix = pd.DataFrame.from_dict(matrix, orient='index')
+        indexes = matrix.index.tolist()
+        matrix = matrix.reindex(columns=indexes)
+
+        return matrix
+
+    def compute_cosine_similarity(self, query_vector):
+        """
+        function that computes cosine similarity between documents and given query vector.
+        returns ranked cosine similarity values stored in a dictionary.
+        """
+        cosine_similarities = {doc: self.cosine_similarity(self.documents_vectors[doc], query_vector)
+                              for doc in self.documents_vectors}
+
+        ranked_cosine_similarities = self.rank_scores(cosine_similarities)
+
+        return ranked_cosine_similarities
+
     def cosine_similarity(self, v1, v2):
         """
         function that computes the cosine similarity between two vectors
@@ -141,13 +195,24 @@ class TFIDF():
 
         return cos_sim
 
+    def print_tfidf(self):
+        """
+        function that nicely prints tfidf scores
+        """
+        for doc in self.tfidf_documents:
+            print(doc)
+            for voc in self.tfidf_documents[doc]:
+                print('\t',voc, self.tfidf_documents[doc][voc])
+
+    def print_scores(self, scores):
+        """
+        function that nicely prints scores
+        """
+        for k, v in scores.items():
+            print(k, '\t', v)
+
 
 if __name__ == '__main__':
-    def tfidf_print(tf_idf):
-        for title in tf_idf:
-            print(title)
-            for voc in tf_idf[title]:
-                print('\t',voc, tf_idf[title][voc])
 
     parser = argparse.ArgumentParser(description='...')
     parser.add_argument('-t', '--test', action='store_true', default=False)
@@ -164,35 +229,26 @@ if __name__ == '__main__':
         documents = book['book_lemmas']
         query = ' '.join(['pedir', 'su', 'desayuno', 'temprano', 'pagar', 'su', 'cuenta', 'y', 'él', 'marchar', 'este', 'ser', 'todo', 'el', 'historia', 'uno', 'momento', 'de', 'silencio', 'y', 'no', 'él', 'ver', 'más', 'preguntar', 'dos', 'o', 'tres', 'voz', 'a', 'uno', 'tiempo', 'nunca', 'más', 'él', 'sentir', 'varios', 'puñetazo', 'sobre', 'el', 'mesa'])
 
-    vocab = vocab.generate_vocab(documents)
-    vocab = list(vocab[0])
+    vocab_info = vocab.generate_vocab(documents)
+    # vocab_info = tuple with types, total number of types, and total number of tokens
+    vocab = list(vocab_info[0])
     tfidf = TFIDF(documents, vocab)
-
-    tf_documents = {doc: tfidf.compute_tf(documents[doc]) for doc in documents}
-    # tf_documents is a dictionary to store each word's tf value per document.
-    # tf_documents['doc']['word'] = tf_score
-
-    idf = tfidf.compute_idf()
-    # idf is a dictionary to store each word's idf value.
-    # as opposed to tf, idf is a unique value per word across the corpus.
-    # idf['word'] = idf_score
-
-    tfidf_documents = {doc: tfidf.compute_tfidf(tf_documents[doc], idf) for doc in documents}
-    #tfidf_print(tfidf_documents)
 
     # input: query as a string (i.e. 'this is a query')
     query_preprocessed = preprocessing.preprocess_query(query)
 
-    best_k = tfidf.matching_score(tfidf_documents, query_preprocessed)
-    for k,v in best_k.items():
-        print(k,v)
+    # comparison metrics:
+    # 1) matching score
+    matching_score = tfidf.matching_score(query_preprocessed)
+    #tfidf.print_scores(matching_score)
 
+    # 2) cosine similarity
+    # it requires query in vector space
     query_tfidf = tfidf.query2tfidf(query_preprocessed)
     query_vector = tfidf.vectorize_tfidf(query_tfidf)
-    documents_vectors = {doc: tfidf.vectorize_tfidf(tfidf_documents[doc]) for doc in tfidf_documents}
+    cosine_similarities = tfidf.compute_cosine_similarity(query_vector)
+    #tfidf.print_scores(cosine_similarities)
 
-    cosine_similarities = {document: tfidf.cosine_similarity(documents_vectors[document], query_vector) for document in documents_vectors}
-
-    sorted_cosine_similarities = {k: v for k, v in sorted(cosine_similarities.items(), key=operator.itemgetter(1), reverse=True)}
-    for k,v in sorted_cosine_similarities.items():
-        print(k,'\t',v)
+    # plotting cosine similarity between documents
+    cosine_similarity_matrix = tfidf.compute_cosine_similarity_matrix()
+    plot.plot_heatmap(cosine_similarity_matrix)
