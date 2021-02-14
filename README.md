@@ -107,8 +107,8 @@ Los argumentos disponibles son:\
 `-s, --scores` imprime en consola los 10 términos con TF-IDF score más alto por documento en corpus.\
 `-q, --query QUERY` texto que será con corpus por medio de `cosine similarity` o `matching score`.\
 `-c, --cosine` comparar `query` utilizando distancia coseno.\
-`-m, --matching` comparar `query` utilizando TF-IDF scores.\
+`-m, --matching` comparar `query` utilizando TF-IDF scores.
 
 Exemplo de uso:\
 `./tfidf.py --test`\
-`./tfidf.py --scores`\
+`./tfidf.py --scores`
