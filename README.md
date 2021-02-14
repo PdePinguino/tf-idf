@@ -6,7 +6,9 @@ Este repositorio tiene por objetivo mostrar cómo la técnica TF-IDF puede ser u
 
 TF-IDF significa Term Frequency - Inverse Document Frequency, y es un valor que asigna la importancia del término para el documento (a mayor valor, mayor importancia). ¿Qué tiene de especial este valor? Que asigna mayor valor a términos que ocurran más veces en el documento, a la vez que ocurran menos veces en los otros documentos. Es decir, hay un valor TF para cada término por documento, y un valor IDF para el término en el corpus completo.
 
-Su fórmula es TFIDF[doc][word] = TF[doc][word] * IDF[word]
+Su fórmula es:
+
+![\Large TF[doc][word]=\frac{freq}{totalWords}](https://latex.codecogs.com/svg.latex?\Large&space;TFIDF[doc][word]=TF[doc][word]*IDF[word]) 
 
 Veamos el detalle. Consideremos:
 
