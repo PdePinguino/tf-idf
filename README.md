@@ -68,7 +68,8 @@ patio | 0.00210 | puerto | 0.00237 | crepúsculo | 0.00181 | determinado | 0.002
 A partir de estas palabras, ya podemos hacernos una idea sobre las temáticas del cuento. Además, podemos percatarnos que casi no hay palabras repetidas, por lo que TF-IDF prefiere palabras que no aparecen en los otros documentos (una diferente implementación podría variar este comportamiento). 
 
 Para cerciorarnos que TF-IDF es de hecho un mecanismo más efectivo que calcular únicamente las frecuencias, comparamos para el cuento 'El vaso de leche' con y sin stop-words. Resultados en la siguiente tabla.
-TF-IDF | All words | Without Stopwords
+
+TF-IDF | con stop-words | sin stop-words
 --- | --- | ---
 'vapor' | el | ser
 'marinero' | él | haber
@@ -81,5 +82,7 @@ TF-IDF | All words | Without Stopwords
 'muelle' | su | después
 'puerto' | no | poder
 
+El lector podrá determinar si las palabras consideradas por TF-IDF son efectivamente más informativas que calcular únicamente la frecuencia, y si son en sí semánticamente importantes en la narración.
+
 ## Créditos
-Texto “El delincuente el vaso de leche, el colo–colo y otros cuentos” extraído de https://colegiochile2010.files.wordpress.com/2010/04/un-mendigo1.pdf
+Texto “El delincuente, el vaso de leche, el colo–colo y otros cuentos” extraído de https://colegiochile2010.files.wordpress.com/2010/04/un-mendigo1.pdf
