@@ -103,12 +103,12 @@ cd tfidf
 ```
 
 Los argumentos disponibles son:\
-`-t, --test` testear el código con un toy-corpus definido en tfidf.py (ver __main__).\
+`-t, --test` testear el código con un toy-corpus definido en tfidf.py (ver main).\
 `-s, --scores` imprime en consola los 10 términos con TF-IDF score más alto por documento en corpus.\
 `-q, --query QUERY` texto que será con corpus por medio de `cosine similarity` o `matching score`.\
 `-c, --cosine` comparar `query` utilizando distancia coseno.\
 `-m, --matching` comparar `query` utilizando TF-IDF scores.\
 
 Exemplo de uso:
-`./tfidf.py --test`
-`./tfidf.py --scores`
+`./tfidf.py --test`\
+`./tfidf.py --scores`\
