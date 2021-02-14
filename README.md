@@ -109,6 +109,6 @@ Los argumentos disponibles son:\
 `-c, --cosine` comparar `query` utilizando distancia coseno.\
 `-m, --matching` comparar `query` utilizando TF-IDF scores.\
 
-Exemplo de uso:
+Exemplo de uso:\
 `./tfidf.py --test`\
 `./tfidf.py --scores`\
