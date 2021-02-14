@@ -14,10 +14,10 @@ Su fórmula es:
 
 Veamos el detalle. Consideremos:
 
-freq = frecuencia de la palabra en el documento\
-totalWords = cantidad total de palabras en el document\
-N = número total de documentos en el corpus\
-Nt = número total de documentos en lo que el término t ocurre\
+freq = frecuencia de la palabra en el documento. 
+totalWords = cantidad total de palabras en el document. 
+N = número total de documentos en el corpus. 
+Nt = número total de documentos en lo que el término t ocurre. 
 
 ![\Large TF[doc][word]=\frac{freq}{totalWords}](https://latex.codecogs.com/svg.latex?\Large&space;TF[doc][word]=\frac{freq}{totalWords}) 
 
@@ -28,9 +28,9 @@ IDF toma el logaritmo para [amortiguar](https://en.wikipedia.org/wiki/Natural_lo
 
 Veamos un ejemplo calculando el valor TF-IDF para las palabras 'el' y 'vapor' en el cuento 'El vaso de leche':
 
-TF['el vaso de leche']['el'] = 0.07468\
-IDF['el'] = log (10 / 10) = log(1) = 0.0\
-TFIDF['el vaso de leche']['el'] = 0.07468 * 0.0 = 0.0\
+TF['el vaso de leche']['el'] = 0.07468. 
+IDF['el'] = log (10 / 10) = log(1) = 0.0. 
+TFIDF['el vaso de leche']['el'] = 0.07468 * 0.0 = 0.0. 
 
 Si bien la palabra es la de mayor frecuencia en este cuento, dado que es también una palabra que ocurre en todos los otros cuentos, no resulta ser un término particularmente importante. Es más, su valor TF es mayor que para la siguiente palabra 'vapor', pero su valor IDF la vuelve irrelevante al considerar el comportamiento de la palabra en el corpus.
 
@@ -51,11 +51,11 @@ En este caso, para calcular IDF, hemos:
 ## Pre-processing
 Una vez obtenemos nuestro corpus, debemos pre-procesar los cuentos para analizarlos. Hemos utilizado PyPDF2 para extraer los cuentos del archivo .pdf y seguido el siguiente preprocesamiento:
 
-- remover puntuación y número (i.e. !,.?-)\
-- remover caracteres que no sean del alfabeto español (i.e. ...entendieran. *ﬁ*¡ Ah! *Š*me dije*Š*. He ahí dos compadres...)\
-- remover espacios en blanco extras\
-- convertir todo a minúscula\
-- lematización utilizando el modelo 'es_dep_news_trf' de spaCy
+- remover puntuación y número (ejemplos: !,.?-5).
+- remover caracteres que no sean del alfabeto español (ejemplo: ...entendieran. **ﬁ**¡ Ah! **Š**me dije**Š**. He ahí dos compadres...).
+- remover espacios en blanco extras.
+- convertir todo a minúscula.
+- lematización utilizando el modelo 'es_dep_news_trf' de spaCy.
 
 ## Resultados: TF-IDF Scores
 Veamos, entonces, qué palabras son las más relevantes utilizando TF-IDF por cuento. La siguiente tabla muestra las 10 palabras con mayor valor por cuento.
@@ -112,3 +112,11 @@ Los argumentos disponibles son:\
 Exemplo de uso:\
 `./tfidf.py --test`\
 `./tfidf.py --scores`
+
+## Librerías
+- spaCy
+- NLTK
+- numpy
+- pandas
+- matplotlib
+- seaborn
