@@ -1,112 +1,69 @@
-# tf-idf
+# ¿Cuáles son las palabras más importantes en los cuentos de Manuel Rojas?
 
-Escuché. Una voz era alta y llena, sonora; la otra, delgada, empezaba las palabras y no las terminaba o las terminaba sin que se entendieran. *ﬁ*¡ Ah! *Š*me dije*Š*. He ahí dos compadres,
+Este repositorio tiene por objetivo mostrar cómo la técnica TF-IDF puede ser utilizada para relevar las palabras de los cuentos de Manuel Rojas. La primera pregunta por responder es cómo saber si una palabra es relevante. Una primera aproximación es considerar que una palabra relevante tiene alta frecuencia, pero como veremos más adelante, esto no siempre es así. Para TF-IDF, la palabra será relevante tomando en consideración su frecuencia dentro del cuento, junto con su frecuencia en los otros documentos. Veamos de qué se trata.
 
-Escuché. Una voz era alta y llena, sonora; la otra, delgada,
-empezaba las palabras y no las terminaba o las terminaba sin
-que se entendieran.
-“¡ Ah! —me dije—. He ahí dos compadres,
+## TF-IDF
 
-## TF-IDF Scores
+TF-IDF significa Term Frequency - Inverse Document Frequency, y es un valor que asigna la importancia del término para el documento (a mayor valor, mayor importancia). ¿Qué tiene de especial este valor? Que asigna mayor valor a términos que ocurran más veces en el documento, a la vez que ocurran menos veces en los otros documentos. Es decir, hay un valor TF para cada término por documento, y un valor IDF para el término en el corpus completo.
 
-EL DELINCUENTE
-cabo 	 0.005515582218770649
-conventillo 	 0.005252935446448238
-ladrón 	 0.0044649951294810026
-sánchez 	 0.004213188252445289
-maestro 	 0.003939701584836178
-delgado 	 0.0025985557404808062
-comisaría 	 0.0021065941262226446
-oficial 	 0.0021065941262226446
-inspector 	 0.0021065941262226446
-patio 	 0.0021011741785792954
-EL VASO DE LECHE
-vapor 	 0.007591688266198586
-marinero 	 0.006326406888498822
-hambre 	 0.006152376751665554
-leche 	 0.00569376619964894
-vainilla 	 0.004428484821949175
-mar 	 0.0037860780010249566
-vaso 	 0.0033128182508968367
-muelle 	 0.002530562755399529
-hungry 	 0.002530562755399529
-puerto 	 0.0023662987506405976
-UN MENDIGO
-número 	 0.006542474222325797
-ramírez 	 0.006048244691597521
-lucas 	 0.004233771284118264
-moneda 	 0.003628946814958512
-hospital 	 0.0030241223457987605
-sobretodo 	 0.0024192978766390083
-cincuenta 	 0.0024192978766390083
-hilo 	 0.002262256302754483
-acera 	 0.0020838697649303126
-crepúsculo 	 0.001814473407479256
-EL TRAMPOLÍN
-agente 	 0.006717186612830135
-preso 	 0.004339402215525534
-esposa 	 0.0033585933064150674
-tren 	 0.0030594014419838235
-argolla 	 0.002686874645132054
-amigo 	 0.0022329399662274567
-patrón 	 0.002025054367245249
-martín 	 0.0020151559838490402
-plataforma 	 0.0020151559838490402
-determinado 	 0.0020151559838490402
-EL COLO - COLO
-colocolo 	 0.01136996332779267
-josé 	 0.006273083215333887
-colo 	 0.004704812411500415
-vicente 	 0.0046927076417088865
-manuel 	 0.004312744710542047
-montero 	 0.0039206770095836785
-ratón 	 0.0035286093086253113
-antuco 	 0.0031365416076669433
-candelilla 	 0.0031365416076669433
-caballo 	 0.0030393786236489685
-LA AVENTURA DE MR. JAIVA
-mr 	 0.01217143272928639
-tony 	 0.010767036645137961
-jaiva 	 0.010298904617088482
-circo 	 0.009830772589039007
-raúl 	 0.008426376504890578
-seguel 	 0.007490112448791624
-público 	 0.0073541096250275325
-imitación 	 0.004213188252445289
-cómico 	 0.003745056224395812
-griego 	 0.003745056224395812
-PEDRO EL PEQUENERO
-pedro 	 0.02940402419277776
-sed 	 0.015850259917240962
-chuico 	 0.009945478771086595
-jesús 	 0.007439917920337595
-cantina 	 0.0069185939277124145
-chicha 	 0.006053769686748363
-vaso 	 0.0038816963062630935
-rey 	 0.0034592969638562072
-don 	 0.0030268848433741813
-vicho 	 0.0030268848433741813
-UN LADRÓN Y SU MUJER
-córdoba 	 0.011672353060888874
-pancho 	 0.009876606436136737
-cabo 	 0.007388396567690542
-indio 	 0.005387239874256402
-fuga 	 0.004040429905692302
-calabozo 	 0.003694198283845271
-cárcel 	 0.0035914932495042682
-reja 	 0.0035914932495042682
-francisco 	 0.003358362076222974
-marido 	 0.0030225258686006765
-LA COMPAÑERA DE VIAJES (A la memoria de D. ADOLFO CRENOVICH)
-milán 	 0.005378238638042106
-señorita 	 0.004481865531701755
-hotel 	 0.004023300933420003
-duse 	 0.003585492425361404
-viajar 	 0.0031373058721912285
-muchacha 	 0.0031373058721912285
-tren 	 0.003061957332912799
-revista 	 0.002689119319021053
-compañera 	 0.002689119319021053
-usted 	 0.002299167752332431
+<!-- <img src="https://render.githubusercontent.com/render/math?math=TFIDF[word] = TF[word] * IDF[word]"> -->
+
+Su fórmula es TFIDF[doc][word] = TF[doc][word] * IDF[word]
+
+En donde,
+
+TF[doc][word] = frecuencia de la palabra en el documento / la cantidad de palabras del documento\
+IDF[word] = log (número total de documentos en el corpus + 1 / número total de documentos en los que la palabra ocurre + 1)
+
+TF normaliza la frecuencia dado que en textos más largos esperaríamos ver más ocurrencias de la misma palabra.\
+IDF toma el logaritmo para [amortiguar](https://en.wikipedia.org/wiki/Natural_logarithm) grandes valores de IDF.
+
+Veamos un ejemplo calculando el valor TF-IDF para las palabras 'el' y 'vapor' en el cuento 'El vaso de leche':
+
+TF['el vaso de leche']['el'] = 0.07468\
+IDF['el'] = log (10 / 10) = log(1) = 0.0\
+TFIDF['el vaso de leche']['el'] = 0.07468 * 0.0 = 0.0\
+
+Si bien la palabra es la de mayor frecuencia en este cuento, dado que es también una palabra que ocurre en todos los otros cuentos, no resulta ser un término particularmente importante.
+
+TF['vapor'] = 0.00471\
+IDF['vapor'] = log (10 / 2) = log(5) = 1.60943\
+TFIDF['vapor'] = 0.00471 * 1.60943 = 0.00759\
+
+Para este cuento, la palabra 'vapor' es la de mayor valor para el cuento, dado que su frecuencia es alta y aparece únicamente en este cuento.
+
+## Implementación
+Hay algunas variantes de la fórmula de TF-IDF para compensar por palabras que no hemos visto previamente en el corpus, o palabras que tienen alta frecuencia en un documento, pero en el resto aparecen escasas veces.
+
+En este caso, para calcular IDF, hemos:
+- sumado 1 al denominador para prevenir divisiones por cero (si la palabra no está en nuestro corpus).
+- sumado 1 al denominador para que su valor sea siempre positivo (logaritmo de un número entre 0 y 1 es negativo).
+- evitado valores de IDF de 0.0 asignándoles arbitrariamente un bajo valor de 1e-7 (con el fin de no excluir completamente palabras como 'el' en el ejemplo anterior).
+
+## Pre-processing
+Una vez obtenemos nuestro corpus, debemos pre-procesar los cuentos para analizarlos. Hemos utilizado PyPDF2 para extraer los cuentos del archivo .pdf y seguido el siguiente preprocesamiento:
+
+- remover puntuación y número (i.e. !,.?-)\
+- remover caracteres que no sean del alfabeto español (i.e. ...entendieran. *ﬁ*¡ Ah! *Š*me dije*Š*. He ahí dos compadres...)\
+- remover espacios en blanco extras\
+- convertir todo a minúscula\
+- lematización utilizando el modelo 'es_dep_news_trf' de spaCy
+
+## Resultados: TF-IDF Scores
+Veamos, entonces, qué palabras son las más relevantes utilizando TF-IDF por cuento. La siguiente tabla muestra las 10 palabras con mayor valor por cuento.
+
+EL DELINCUENTE | | EL VASO DE LECHE | | UN MENDIGO | | EL TRAMPOLÍN | | EL COLO - COLO | | LA AVENTURA DE MR. JAIVA | | PEDRO EL PEQUENERO | | UN LADRÓN Y SU MUJER | | LA COMPAÑERA DE VIAJES | 
+ --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- 
+cabo | 0.00552 | vapor | 0.00759 | número | 0.00654 | agente | 0.00672 | colocolo | 0.01137 | mr | 0.01217 | pedro | 0.02940 | córdoba | 0.01167 | milán | 0.00538
+conventillo | 0.00525 | marinero | 0.00633 | ramírez | 0.00605 | preso | 0.00434 | josé | 0.00627 | tony | 0.01077 | sed | 0.01585 | pancho | 0.00988 | señorita | 0.00448
+ladrón | 0.00446 | hambre | 0.00615 | lucas | 0.00423 | esposa | 0.00336 | colo | 0.00470 | jaiva | 0.01030 | chuico | 0.00995 | cabo | 0.00739 | hotel | 0.00402
+sánchez | 0.00421 | leche | 0.00569 | moneda | 0.00363 | tren | 0.00306 | vicente | 0.00469 | circo | 0.00983 | jesús | 0.00744 | indio | 0.00539 | duse | 0.00359
+maestro | 0.00394 | vainilla | 0.00443 | hospital | 0.00302 | argolla | 0.00269 | manuel | 0.00431 | raúl | 0.00843 | cantina | 0.00692 | fuga | 0.00404 | viajar | 0.00314
+delgado | 0.00260 | mar | 0.00379 | sobretodo | 0.00242 | amigo | 0.00223 | montero | 0.00392 | seguel | 0.00749 | chicha | 0.00605 | calabozo | 0.00369 | muchacha | 0.00314
+comisaría | 0.00211 | vaso | 0.00331 | cincuenta | 0.00242 | patrón | 0.00203 | ratón | 0.00353 | público | 0.00735 | vaso | 0.00388 | cárcel | 0.00359 | tren | 0.00306
+oficial | 0.00211 | hungry | 0.00253 | hilo | 0.00226 | relato | 0.00202 | antuco | 0.00314 | imitación | 0.00421 | rey | 0.00346 | reja | 0.00359 | compañera | 0.00269
+inspector | 0.00211 | muelle | 0.00253 | acera | 0.00208 | conciencia | 0.00202 | candelilla | 0.00314 | cómico | 0.00375 | vicho | 0.00303 | francisco | 0.00336 | revista | 0.00269
+patio | 0.00210 | puerto | 0.00237 | crepúsculo | 0.00181 | determinado | 0.00202 | caballo | 0.00304 | griego | 0.00375 | don | 0.00303 | marido | 0.00302 | usted | 0.00230
+
 
 https://colegiochile2010.files.wordpress.com/2010/04/un-mendigo1.pdf
