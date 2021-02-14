@@ -1,4 +1,4 @@
-# ¿Cuáles son las palabras más importantes en los cuentos de Manuel Rojas?
+# ¿Cuáles son las palabras más importantes en los cuentos de Manuel Rojas según TF-IDF?
 
 Este repositorio tiene por objetivo mostrar cómo la técnica TF-IDF puede ser utilizada para relevar las palabras de los cuentos de Manuel Rojas. La primera pregunta por responder es cómo saber si una palabra es relevante. Una primera aproximación es considerar que una palabra relevante tiene alta frecuencia, pero como veremos más adelante, esto no siempre es así. Para TF-IDF, la palabra será relevante tomando en consideración su frecuencia dentro del cuento, junto con su frecuencia en los otros documentos. Veamos de qué se trata.
 
