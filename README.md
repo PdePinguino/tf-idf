@@ -65,5 +65,21 @@ oficial | 0.00211 | hungry | 0.00253 | hilo | 0.00226 | relato | 0.00202 | antuc
 inspector | 0.00211 | muelle | 0.00253 | acera | 0.00208 | conciencia | 0.00202 | candelilla | 0.00314 | cómico | 0.00375 | vicho | 0.00303 | francisco | 0.00336 | revista | 0.00269
 patio | 0.00210 | puerto | 0.00237 | crepúsculo | 0.00181 | determinado | 0.00202 | caballo | 0.00304 | griego | 0.00375 | don | 0.00303 | marido | 0.00302 | usted | 0.00230
 
+A partir de estas palabras, ya podemos hacernos una idea sobre las temáticas del cuento. Además, podemos percatarnos que casi no hay palabras repetidas, por lo que TF-IDF prefiere palabras que no aparecen en los otros documentos (una diferente implementación podría variar este comportamiento). 
 
-https://colegiochile2010.files.wordpress.com/2010/04/un-mendigo1.pdf
+Para cerciorarnos que TF-IDF es de hecho un mecanismo más efectivo que calcular únicamente las frecuencias, comparamos para el cuento 'El vaso de leche' con y sin stop-words. Resultados en la siguiente tabla.
+TF-IDF | All words | Without Stopwords
+--- | --- | ---
+'vapor' | el | ser
+'marinero' | él | haber
+'hambre' | de | tener
+'leche' | y | comer
+'vainilla' | uno | hambre
+'mar' | que | vapor
+'vaso' | en | mirar
+'hungry' | a | marinero
+'muelle' | su | después
+'puerto' | no | poder
+
+## Créditos
+Texto “El delincuente el vaso de leche, el colo–colo y otros cuentos” extraído de https://colegiochile2010.files.wordpress.com/2010/04/un-mendigo1.pdf
