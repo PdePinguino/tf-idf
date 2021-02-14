@@ -6,14 +6,18 @@ Este repositorio tiene por objetivo mostrar cómo la técnica TF-IDF puede ser u
 
 TF-IDF significa Term Frequency - Inverse Document Frequency, y es un valor que asigna la importancia del término para el documento (a mayor valor, mayor importancia). ¿Qué tiene de especial este valor? Que asigna mayor valor a términos que ocurran más veces en el documento, a la vez que ocurran menos veces en los otros documentos. Es decir, hay un valor TF para cada término por documento, y un valor IDF para el término en el corpus completo.
 
-<!-- <img src="https://render.githubusercontent.com/render/math?math=TFIDF[word] = TF[word] * IDF[word]"> -->
-
 Su fórmula es TFIDF[doc][word] = TF[doc][word] * IDF[word]
 
-En donde,
+Veamos el detalle. Consideremos:
 
-TF[doc][word] = frecuencia de la palabra en el documento / la cantidad de palabras del documento\
-IDF[word] = log (número total de documentos en el corpus + 1 / número total de documentos en los que la palabra ocurre + 1)
+freq = frecuencia de la palabra en el documento\
+totalWords = cantidad total de palabras en el document\
+N = número total de documentos en el corpus\
+Nt = número total de documentos en lo que el término t ocurre\
+
+![\Large TF[doc][word]=\frac{freq}{totalWords}](https://latex.codecogs.com/svg.latex?\Large&space;TF[doc][word]=\frac{freq}{totalWords}) 
+
+![\Large IDF[word]=log(\frac{N+1}{N_t+1})](https://latex.codecogs.com/svg.latex?\Large&space;IDF[word]=log(\frac{N+1}{N_t+1})) 
 
 TF normaliza la frecuencia dado que en textos más largos esperaríamos ver más ocurrencias de la misma palabra.\
 IDF toma el logaritmo para [amortiguar](https://en.wikipedia.org/wiki/Natural_logarithm) grandes valores de IDF.
