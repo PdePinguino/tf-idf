@@ -2,6 +2,8 @@
 
 Este repositorio tiene por objetivo mostrar cómo la técnica TF-IDF puede ser utilizada para relevar las palabras de los cuentos de Manuel Rojas. La primera pregunta por responder es cómo saber si una palabra es relevante. Una primera aproximación es considerar que una palabra relevante tiene alta frecuencia, pero como veremos más adelante, esto no siempre es así. Para TF-IDF, la palabra será relevante tomando en consideración su frecuencia dentro del cuento, junto con su frecuencia en los otros documentos. Veamos de qué se trata.
 
+*Instrucciones para utilizar el repositorio y argumentos disponibles, ver al final del readme.*
+
 ## TF-IDF
 
 TF-IDF significa Term Frequency - Inverse Document Frequency, y es un valor que asigna la importancia del término para el documento (a mayor valor, mayor importancia). ¿Qué tiene de especial este valor? Que asigna mayor valor a términos que ocurran más veces en el documento, a la vez que ocurran menos veces en los otros documentos. Es decir, hay un valor TF para cada término por documento, y un valor IDF para el término en el corpus completo.
@@ -92,3 +94,21 @@ El lector podrá determinar si las palabras consideradas por TF-IDF son efectiva
 
 ## Créditos
 Texto “El delincuente, el vaso de leche, el colo–colo y otros cuentos” extraído de https://colegiochile2010.files.wordpress.com/2010/04/un-mendigo1.pdf
+
+## Utilizar el repositorio
+```
+git clone https://github.com/PdePinguino/tfidf.git
+cd tfidf
+./tfidf.py
+```
+
+Los argumentos disponibles son:\
+`-t, --test` testear el código con un toy-corpus definido en tfidf.py (ver __main__).\
+`-s, --scores` imprime en consola los 10 términos con TF-IDF score más alto por documento en corpus.\
+`-q, --query QUERY` texto que será con corpus por medio de `cosine similarity` o `matching score`.\
+`-c, --cosine` comparar `query` utilizando distancia coseno.\
+`-m, --matching` comparar `query` utilizando TF-IDF scores.\
+
+Exemplo de uso:
+`./tfidf.py --test`
+`./tfidf.py --scores`
