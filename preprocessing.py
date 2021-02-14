@@ -53,15 +53,6 @@ def lowercase(tale):
 
     return tale
 
-def remove_numbers(tale):
-    print(tale)
-    for word in tale:
-        print(type(word))
-    #tale = [word for word in tale if word.isalpha()]
-    #print(tale)
-    quit()
-    return tale
-
 def join_pages(tale):
     tale = ' '.join([page for page in tale[1:]])  # dropping first line that is the title
     return tale
@@ -69,7 +60,6 @@ def join_pages(tale):
 def clean_tale(tale):
     tale = remove_punctuation_numbers(tale)
     tale = remove_ool_characters(tale)
-    #tale = remove_numbers(tale)
     tale = remove_whitespace(tale)
     tale = lowercase(tale)
     tale = join_pages(tale)  # each page is a string in tale; now is only one long string
@@ -99,7 +89,6 @@ def preprocess(file):
 def preprocess_query(query):
     query = remove_punctuation_numbers(query)
     query = remove_ool_characters(query)
-    #query = remove_numbers(query)
     query = lowercase(query)
     query = ''.join(query).split()
 
@@ -126,6 +115,6 @@ if __name__ == '__main__':
     print(preprocess_query(query))
 
     # to save to json format, uncomment these lines
-    object = {'book': book, 'book_lemmas': book_lemmas}
-    with open('text_processed.json', 'w', encoding='utf8') as outfile:
-        json.dump(object, outfile)
+    #object = {'book': book, 'book_lemmas': book_lemmas}
+    #with open('text_processed.json', 'w', encoding='utf8') as outfile:
+    #    json.dump(object, outfile)

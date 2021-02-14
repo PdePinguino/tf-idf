@@ -87,7 +87,7 @@ class TFIDF():
             # added 1 to denominator to avoid division by 0 if term t is not in any document
             df = self.frequency_N(voc)
             idf_score = math.log((self.N + 1) / (df + 1))
-            #print(voc, 'df', df, 'idf_score', idf_score)
+
             # if term t appears in all documents: log(N/N) --> log(1) --> idf =  0.0
             # smoothing idf score to avoid multiplication by 0
             if idf_score == 0.0:
