@@ -24,7 +24,7 @@ TF['el vaso de leche']['el'] = 0.07468\
 IDF['el'] = log (10 / 10) = log(1) = 0.0\
 TFIDF['el vaso de leche']['el'] = 0.07468 * 0.0 = 0.0\
 
-Si bien la palabra es la de mayor frecuencia en este cuento, dado que es también una palabra que ocurre en todos los otros cuentos, no resulta ser un término particularmente importante.
+Si bien la palabra es la de mayor frecuencia en este cuento, dado que es también una palabra que ocurre en todos los otros cuentos, no resulta ser un término particularmente importante. Es más, su valor TF es mayor que para la siguiente palabra 'vapor', pero su valor IDF la vuelve irrelevante al considerar el comportamiento de la palabra en el corpus.
 
 TF['vapor'] = 0.00471\
 IDF['vapor'] = log (10 / 2) = log(5) = 1.60943\
