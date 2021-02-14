@@ -83,10 +83,10 @@ TF-IDF | con stop-words | sin stop-words
 'marinero' | él | haber
 'hambre' | de | tener
 'leche' | y | comer
-'vainilla' | uno | hambre
-'mar' | que | vapor
+'vainilla' | uno | **hambre**
+'mar' | que | **vapor**
 'vaso' | en | mirar
-'hungry' | a | marinero
+'hungry' | a | **marinero**
 'muelle' | su | después
 'puerto' | no | poder
 
